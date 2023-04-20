@@ -1,0 +1,32 @@
+classdef Node
+    properties
+        %Node id in network
+        ID {mustBeNumeric}
+        %queue of packet ids
+        Queue (1,:) {mustBeNumeric}
+        %number of packets in queue
+        QueueSize {mustBeNumeric}
+        %transmission success probabilities to adjacent nodes
+        Edges (1,:) {mustBeNumeric}
+    end
+    methods
+        function node = Node(id,edgeWeights)
+            node.ID = id;
+            node.Edges = edgeWeights;
+            node.Queue = [];
+            node.QueueSize = 0;
+        end
+        function options = Send(node)
+            options = [];
+            if node.QueueSize == 0
+                return;
+            end
+            for n = node.Edges
+                if rand(1,1) < n
+                    options.
+                
+            end
+        end
+
+    end
+end
