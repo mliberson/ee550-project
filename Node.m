@@ -1,13 +1,13 @@
 classdef Node
     properties
         %Node id in network
-        ID {mustBeNumeric}
+        ID {mustBeInteger}
         %queue of packet ids
-        Queue (1,:) {mustBeNumeric}
+        Queue (1,:) {mustBeInteger}
         %number of packets in queue
-        QueueSize {mustBeNumeric}
+        QueueSize {mustBeInteger}
         %transmission success probabilities to adjacent nodes
-        Edges (1,:) {mustBeNumeric}
+        Edges (1,:) {mustBePositive}
         %indicator of transmission success used to remove from queue
         Status {mustBeNumericOrLogical}
     end
@@ -19,7 +19,7 @@ classdef Node
             node.QueueSize = 0;
             node.Status = false;
         end
-        function options = Send(node)
+        function [node, options] = GetReceiverOptions(node)
             options = [];
             if node.QueueSize == 0
                 return;
@@ -31,14 +31,18 @@ classdef Node
                 end
             end
         end
-        function node = UpdateQueue(node,packetID)
-            if packet
-                node.Queue{end+1} = packetID;
-                node.QueueSize = node.QueueSize + 1;
-            end
+        function [node, packetID] = RemovePacket(node)
+            packetID = 0;
             if node.Status
                 node.Queue = node.Queue(2:end);
                 node.Status = false;
+                packetID = node.Queue(end);
+            end
+        end
+        function node = InsertPacket(node,packetID)
+            if packetID
+                node.Queue{end+1} = packetID;
+                node.QueueSize = node.QueueSize + 1;
             end
         end
     end
