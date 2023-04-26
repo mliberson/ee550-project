@@ -1,13 +1,13 @@
 classdef Node
     properties
         %Node id in network
-        ID {mustBeInteger}
+        ID {mustBeInteger,mustBeNonnegative}
         %queue of packet ids
-        Queue (1,:) {mustBeInteger}
+        Queue (1,:) {mustBeInteger,mustBeNonnegative}
         %number of packets in queue
-        QueueSize {mustBeInteger}
+        QueueSize {mustBeInteger,mustBeNonnegative}
         %transmission success probabilities to adjacent nodes
-        Edges (1,:) {mustBePositive}
+        Edges (1,:) {mustBeNonnegative}
         %indicator of transmission success used to remove from queue
         Status {mustBeNumericOrLogical}
     end
