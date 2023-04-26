@@ -112,23 +112,20 @@ class Graph:
 
 lam = 0.9
 
-graph = Graph(False)
-
 time = 0
 n = 0
 
-for i in range(100):
+for i in range(10):
     arrivals = np.random.poisson(lam,1000)
 
+    graph = Graph(False)
     for arrival in arrivals:
         graph.Run(arrival)
-    while graph.NetworkOccupancy > 0:
-        graph.Run(0)
-
     for packet in graph.Packets:
-        if not packet.IsActive:
-            time = time+packet.TravelTime
+        if packet.IsActive:
             n = n+1
 
-print(time/n)
+n = n/10
+
+print(n)
     
