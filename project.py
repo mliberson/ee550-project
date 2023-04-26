@@ -118,7 +118,7 @@ time = 0
 n = 0
 
 for i in range(100):
-    arrivals = np.random.poisson(lam,10000)
+    arrivals = np.random.poisson(lam,1000)
 
     for arrival in arrivals:
         graph.Run(arrival)
