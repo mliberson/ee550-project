@@ -43,38 +43,6 @@ class Graph:
     def __init__(self, edges, queueSelection: bool):
         self.Nodes = []
         self.Edges = edges
-
-        self.Edges = [[1,0.4,0.4,0.4,0,0,0,0,0],
-                      [0,1,0,0,0.4,0.4,0,0,0],
-                      [0,0,1,0.4,0.4,0.4,0,0,0],
-                      [0,0,0,1,0,0,0,0.4,0],
-                      [0,0,0,0,1,0,0.4,0.4,0],
-                      [0,0,0,0,0,1,0.4,0.4,0.4],
-                      [0,0,0,0,0,0,1,0,0.4],
-                      [0,0,0,0,0,0,0,1,0.4],
-                      [0,0,0,0,0,0,0,0,1]]
-        '''
-        self.Edges = [[1, 0.4, 0, 0.4, 0, 0, 0],
-                      [0, 1, 0.4, 0.4, 0.1, 0, 0],
-                      [0, 0, 1, 0, 0.4, 0, 0],
-                      [0, 0, 0, 1, 0.4, 0.1, 0],
-                      [0, 0, 0, 0, 1, 0.4, 0.1],
-                      [0, 0, 0, 0, 0, 1, 0.4],
-                      [0, 0, 0, 0, 0, 0, 1]]
-        
-        self.Edges = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
-                      [0,1,0,0,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,1,0,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,0,1,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,0,0,1,0,0,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,1,0,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,0,1,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,0,0,1,0,0,0.5],
-                      [0,0,0,0,0,0,0,0,1,0,0.5],
-                      [0,0,0,0,0,0,0,0,0,1,0.5],
-                      [0,0,0,0,0,0,0,0,0,0,1]]
-        '''
-        
         self.QueueSizes = []
         self.sumQueueSizes = []
         self.NetworkOccupancy = 0
@@ -127,7 +95,7 @@ class Graph:
                 minQueueSize = self.Nodes[nodeId].QueueSize
         return minQueueNode
 
-lam = 0.7
+lam = 1
 
 x_values = []
 y_values_1t = []
@@ -137,25 +105,7 @@ y_values_2f = []
 y_values_3t = []
 y_values_3f = []
 
-edges1 = [[1,0.4,0.4,0.4,0,0,0,0,0],
-          [0,1,0,0,0.4,0.4,0,0,0],
-          [0,0,1,0.4,0.4,0.4,0,0,0],
-          [0,0,0,1,0,0,0,0.4,0],
-          [0,0,0,0,1,0,0.4,0.4,0],
-          [0,0,0,0,0,1,0.4,0.4,0.4],
-          [0,0,0,0,0,0,1,0,0.4],
-          [0,0,0,0,0,0,0,1,0.4],
-          [0,0,0,0,0,0,0,0,1]]
-
-edges2 = [[1, 0.4, 0, 0.4, 0, 0, 0],
-          [0, 1, 0.4, 0.4, 0.1, 0, 0],
-          [0, 0, 1, 0, 0.4, 0, 0],
-          [0, 0, 0, 1, 0.4, 0.1, 0],
-          [0, 0, 0, 0, 1, 0.4, 0.1],
-          [0, 0, 0, 0, 0, 1, 0.4],
-          [0, 0, 0, 0, 0, 0, 1]]
-
-edges3 = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
+edges1 = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
           [0,1,0,0,0.5,0.5,0.5,0,0,0,0],
           [0,0,1,0,0.5,0.5,0.5,0,0,0,0],
           [0,0,0,1,0.5,0.5,0.5,0,0,0,0],
@@ -166,6 +116,24 @@ edges3 = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
           [0,0,0,0,0,0,0,0,1,0,0.5],
           [0,0,0,0,0,0,0,0,0,1,0.5],
           [0,0,0,0,0,0,0,0,0,0,1]]
+
+edges2 = [[1, 0.4, 0, 0.4, 0, 0, 0],
+          [0, 1, 0.4, 0.4, 0.2, 0, 0],
+          [0, 0, 1, 0, 0.4, 0, 0],
+          [0, 0.2, 0, 1, 0.4, 0.2, 0],
+          [0, 0, 0, 0, 1, 0.4, 0.2],
+          [0, 0, 0, 0, 0, 1, 0.4],
+          [0, 0, 0, 0, 0, 0, 1]]
+
+edges3 = [[1,0.5,0.5,0.5,0,0,0,0,0],
+          [0,1,0,0,0.5,0.5,0,0,0],
+          [0,0,1,0.5,0.5,0.5,0,0,0],
+          [0,0,0,1,0,0,0,0.5,0],
+          [0,0,0,0,1,0,0.5,0.5,0],
+          [0,0,0,0,0,1,0.5,0.5,0.5],
+          [0,0,0,0,0,0,1,0,0.5],
+          [0,0,0,0,0,0,0,1,0.5],
+          [0,0,0,0,0,0,0,0,1]]
 
 j = 0.01
 while j <= lam:
@@ -222,7 +190,7 @@ plt.scatter(x_values,y_values_1f,color='blue',label="Index Selection")
 
 plt.xlabel('Lambda')
 plt.ylabel('N')
-plt.title('N vs Lambda from 0.01 to 0.6 for Graph 1')
+plt.title('N vs Lambda from 0.01 to 1 for Network 1')
 
 plt.legend()
 plt.grid(True)
@@ -233,7 +201,7 @@ plt.scatter(x_values,y_values_2f,color='blue',label="Index Selection")
 
 plt.xlabel('Lambda')
 plt.ylabel('N')
-plt.title('N vs Lambda from 0.01 to 0.6 for Graph 2')
+plt.title('N vs Lambda from 0.01 to 1 for Network 2')
 
 plt.legend()
 plt.grid(True)
@@ -244,11 +212,46 @@ plt.scatter(x_values,y_values_3f,color='blue',label="Index Selection")
 
 plt.xlabel('Lambda')
 plt.ylabel('N')
-plt.title('N vs Lambda from 0.01 to 0.6 for Graph 3')
+plt.title('N vs Lambda from 0.01 to 1 for Network 3')
 
 plt.legend()
 plt.grid(True)
 plt.show()
+
+#print edge weights in latex format
+'''
+string = ""
+for row in edges1:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+
+string = ""
+for row in edges2:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+
+string = ""
+for row in edges3:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+'''
+
+
 
 
     
