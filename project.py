@@ -2,6 +2,8 @@ import random
 import numpy as np
 import sys
 
+import matplotlib.pyplot as plt
+
 class Packet:
     def __init__(self, id, arrival_time):
         self.ID = id
@@ -28,10 +30,9 @@ class Node:
         for i in range(len(self.Edges)):
             if random.random() < self.Edges[i] and not i == self.ID:
                 options.append(i)
-                packetID = self.Queue[-1]
+                packetID = self.Queue[0]
         return options, packetID
     def RemovePacket(self):
-        self.Queue.pop()
         self.QueueSize = self.QueueSize - 1
     def InsertPacket(self, packetID):
         if packetID:
@@ -39,29 +40,11 @@ class Node:
             self.QueueSize = self.QueueSize + 1
 
 class Graph:
-    def __init__(self, queueSelection: bool):
+    def __init__(self, edges, queueSelection: bool):
         self.Nodes = []
-        '''
-        self.Edges = [[1, 0.4, 0, 0.4, 0, 0, 0],
-                      [0, 1, 0.4, 0.4, 0.1, 0, 0],
-                      [0, 0, 1, 0, 0.4, 0, 0],
-                      [0, 0, 0, 1, 0.4, 0.1, 0],
-                      [0, 0, 0, 0, 1, 0.4, 0.1],
-                      [0, 0, 0, 0, 0, 1, 0.4],
-                      [0, 0, 0, 0, 0, 0, 1]]
-        '''
-        self.Edges = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
-                      [0,1,0,0,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,1,0,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,0,1,0.5,0.5,0.5,0,0,0,0],
-                      [0,0,0,0,1,0,0,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,1,0,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,0,1,0.5,0.5,0.5,0],
-                      [0,0,0,0,0,0,0,1,0,0,0.5],
-                      [0,0,0,0,0,0,0,0,1,0,0.5],
-                      [0,0,0,0,0,0,0,0,0,1,0.5],
-                      [0,0,0,0,0,0,0,0,0,0,1]]
+        self.Edges = edges
         self.QueueSizes = []
+        self.sumQueueSizes = []
         self.NetworkOccupancy = 0
         self.Packets = []
         self.Time = 1
@@ -99,6 +82,8 @@ class Graph:
         queueSizesTemp = []
         for node in self.Nodes:
             queueSizesTemp.append(node.QueueSize)
+        queueSizesTemp.pop()
+        self.sumQueueSizes.append(sum(queueSizesTemp))
         self.QueueSizes.append(queueSizesTemp)
         self.Time += 1 
     def GetMinQueueNode(self, nodeIds):
@@ -110,22 +95,163 @@ class Graph:
                 minQueueSize = self.Nodes[nodeId].QueueSize
         return minQueueNode
 
-lam = 0.9
+lam = 1
 
-time = 0
-n = 0
+x_values = []
+y_values_1t = []
+y_values_1f = []
+y_values_2t = []
+y_values_2f = []
+y_values_3t = []
+y_values_3f = []
 
-for i in range(10):
-    arrivals = np.random.poisson(lam,1000)
+edges1 = [[1,0.5,0.5,0.5,0,0,0,0,0,0,0],
+          [0,1,0,0,0.5,0.5,0.5,0,0,0,0],
+          [0,0,1,0,0.5,0.5,0.5,0,0,0,0],
+          [0,0,0,1,0.5,0.5,0.5,0,0,0,0],
+          [0,0,0,0,1,0,0,0.5,0.5,0.5,0],
+          [0,0,0,0,0,1,0,0.5,0.5,0.5,0],
+          [0,0,0,0,0,0,1,0.5,0.5,0.5,0],
+          [0,0,0,0,0,0,0,1,0,0,0.5],
+          [0,0,0,0,0,0,0,0,1,0,0.5],
+          [0,0,0,0,0,0,0,0,0,1,0.5],
+          [0,0,0,0,0,0,0,0,0,0,1]]
 
-    graph = Graph(False)
+edges2 = [[1, 0.4, 0, 0.4, 0, 0, 0],
+          [0, 1, 0.4, 0.4, 0.2, 0, 0],
+          [0, 0, 1, 0, 0.4, 0, 0],
+          [0, 0.2, 0, 1, 0.4, 0.2, 0],
+          [0, 0, 0, 0, 1, 0.4, 0.2],
+          [0, 0, 0, 0, 0, 1, 0.4],
+          [0, 0, 0, 0, 0, 0, 1]]
+
+edges3 = [[1,0.5,0.5,0.5,0,0,0,0,0],
+          [0,1,0,0,0.5,0.5,0,0,0],
+          [0,0,1,0.5,0.5,0.5,0,0,0],
+          [0,0,0,1,0,0,0,0.5,0],
+          [0,0,0,0,1,0,0.5,0.5,0],
+          [0,0,0,0,0,1,0.5,0.5,0.5],
+          [0,0,0,0,0,0,1,0,0.5],
+          [0,0,0,0,0,0,0,1,0.5],
+          [0,0,0,0,0,0,0,0,1]]
+
+j = 0.01
+while j <= lam:
+    time = 0
+    n = 0
+    arrivals = np.random.poisson(j,1000)
+
+    graph1t = Graph(edges1,True)
+    graph1f = Graph(edges1,False)
+
+    graph2t = Graph(edges2,True)
+    graph2f = Graph(edges2,False)
+
+    graph3t = Graph(edges3,True)
+    graph3f = Graph(edges3,False)
+
     for arrival in arrivals:
-        graph.Run(arrival)
-    for packet in graph.Packets:
-        if packet.IsActive:
-            n = n+1
+        graph1t.Run(arrival)
+        graph1f.Run(arrival)
+        graph2t.Run(arrival)
+        graph2f.Run(arrival)
+        graph3t.Run(arrival)
+        graph3f.Run(arrival)
 
-n = n/10
+    y_values_temp_1t = 0
+    y_values_temp_1f = 0
+    y_values_temp_2t = 0
+    y_values_temp_2f = 0
+    y_values_temp_3t = 0
+    y_values_temp_3f = 0
+    for i in range(len(graph1t.sumQueueSizes)):
+        y_values_temp_1t = y_values_temp_1t + graph1t.sumQueueSizes[i]
+        y_values_temp_1f = y_values_temp_1f + graph1f.sumQueueSizes[i]
 
-print(n)
+        y_values_temp_2t = y_values_temp_2t + graph2t.sumQueueSizes[i]
+        y_values_temp_2f = y_values_temp_2f + graph2f.sumQueueSizes[i]
+
+        y_values_temp_3t = y_values_temp_3t + graph3t.sumQueueSizes[i]
+        y_values_temp_3f = y_values_temp_3f + graph3f.sumQueueSizes[i]
+
+    x_values.append(j)
+    y_values_1t.append(y_values_temp_1t/1000)
+    y_values_1f.append(y_values_temp_1f/1000)
+    y_values_2t.append(y_values_temp_2t/1000)
+    y_values_2f.append(y_values_temp_2f/1000)
+    y_values_3t.append(y_values_temp_3t/1000)
+    y_values_3f.append(y_values_temp_3f/1000)
+    j = j+0.01
+
+# Create a scatter plot
+
+plt.scatter(x_values,y_values_1t,color='red',label="Queue Selection")
+plt.scatter(x_values,y_values_1f,color='blue',label="Index Selection")
+
+plt.xlabel('Lambda')
+plt.ylabel('N')
+plt.title('N vs Lambda from 0.01 to 1 for Network 1')
+
+plt.legend()
+plt.grid(True)
+plt.show()
+
+plt.scatter(x_values,y_values_2t,color='red',label="Queue Selection")
+plt.scatter(x_values,y_values_2f,color='blue',label="Index Selection")
+
+plt.xlabel('Lambda')
+plt.ylabel('N')
+plt.title('N vs Lambda from 0.01 to 1 for Network 2')
+
+plt.legend()
+plt.grid(True)
+plt.show()
+
+plt.scatter(x_values,y_values_3t,color='red',label="Queue Selection")
+plt.scatter(x_values,y_values_3f,color='blue',label="Index Selection")
+
+plt.xlabel('Lambda')
+plt.ylabel('N')
+plt.title('N vs Lambda from 0.01 to 1 for Network 3')
+
+plt.legend()
+plt.grid(True)
+plt.show()
+
+#print edge weights in latex format
+'''
+string = ""
+for row in edges1:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+
+string = ""
+for row in edges2:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+
+string = ""
+for row in edges3:
+    for edge in row:
+        string = string + str(edge) + " & "
+    string = string[:-1]
+    string = string[:-1]
+    string = string[:-1]
+    string = string + "\\ \n"
+print(string)
+'''
+
+
+
+
     
